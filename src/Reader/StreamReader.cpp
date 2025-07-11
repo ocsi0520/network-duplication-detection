@@ -28,6 +28,7 @@ std::vector<MyNetwork::NetworkRecord> MyNetwork::DataStreamReader::read_data()
                       << read_line << "\n";
         }
     }
+    std::cout << std::flush;
 
     return result;
 }
