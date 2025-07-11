@@ -2,7 +2,7 @@
 #include "LineParser.hpp"
 #include <string>
 
-void assert_135061_record(const MyNetwork::NetworkRecord& nw)
+void assert_135061_record(const MyNetwork::NetworkRecord &nw)
 {
     EXPECT_EQ(nw.ID, 135061);
     EXPECT_EQ(nw.FROM_NODE, 22785);
@@ -44,7 +44,7 @@ TEST(LineParserTest, ReadLineWithoutNewLine)
 {
     MyNetwork::CellParser cp;
     MyNetwork::LineParser line_parser{cp};
-    // std::string a_line{"515968,10986,390897,\"4\",3,\"\",\"\",110,\"F\",\"NNNNNNN\",50,0,45,0,0,0,\"Budaörsi\",\"út\",\"1\",\"\",\"\",0,0,\"\",0,0,\"Budapest\",\"Budapest\",\"XI. kerület\",\"XI. kerület\",3352,3352,\"0\",\"0\""};
+
     MyNetwork::NetworkRecord nw = line_parser.parse_line(
         "135061,22785,108177,\"7\",3,\"\",\"\",108,\"F\",\"NNNNNNN\",50,0,22,0,0,0,"
         "\"Kamaraerdei\",\"út\",\"\",\"\",\"\",0,0,\"\",0,0,\"Budapest\",\"Budapest\",\"XXII. kerület\","
@@ -57,7 +57,7 @@ TEST(LineParserTest, ReadLineWithNewLine)
 {
     MyNetwork::CellParser cp;
     MyNetwork::LineParser line_parser{cp};
-    // std::string a_line{"515968,10986,390897,\"4\",3,\"\",\"\",110,\"F\",\"NNNNNNN\",50,0,45,0,0,0,\"Budaörsi\",\"út\",\"1\",\"\",\"\",0,0,\"\",0,0,\"Budapest\",\"Budapest\",\"XI. kerület\",\"XI. kerület\",3352,3352,\"0\",\"0\""};
+
     MyNetwork::NetworkRecord nw = line_parser.parse_line(
         "135061,22785,108177,\"7\",3,\"\",\"\",108,\"F\",\"NNNNNNN\",50,0,22,0,0,0,"
         "\"Kamaraerdei\",\"út\",\"\",\"\",\"\",0,0,\"\",0,0,\"Budapest\",\"Budapest\",\"XXII. kerület\","
@@ -70,7 +70,7 @@ TEST(LineParserTest, ReadLineWithGibberishAtTheEnd)
 {
     MyNetwork::CellParser cp;
     MyNetwork::LineParser line_parser{cp};
-    // std::string a_line{"515968,10986,390897,\"4\",3,\"\",\"\",110,\"F\",\"NNNNNNN\",50,0,45,0,0,0,\"Budaörsi\",\"út\",\"1\",\"\",\"\",0,0,\"\",0,0,\"Budapest\",\"Budapest\",\"XI. kerület\",\"XI. kerület\",3352,3352,\"0\",\"0\""};
+
     MyNetwork::NetworkRecord nw = line_parser.parse_line(
         "135061,22785,108177,\"7\",3,\"\",\"\",108,\"F\",\"NNNNNNN\",50,0,22,0,0,0,"
         "\"Kamaraerdei\",\"út\",\"\",\"\",\"\",0,0,\"\",0,0,\"Budapest\",\"Budapest\",\"XXII. kerület\","
