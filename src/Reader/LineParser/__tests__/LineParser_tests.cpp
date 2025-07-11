@@ -2,16 +2,8 @@
 #include "LineParser.hpp"
 #include <string>
 
-TEST(LineParserTest, ReadSimpleLine)
+void assert_135061_record(const MyNetwork::NetworkRecord& nw)
 {
-    MyNetwork::CellParser cp;
-    MyNetwork::LineParser line_parser{cp};
-    // std::string a_line{"515968,10986,390897,\"4\",3,\"\",\"\",110,\"F\",\"NNNNNNN\",50,0,45,0,0,0,\"Budaörsi\",\"út\",\"1\",\"\",\"\",0,0,\"\",0,0,\"Budapest\",\"Budapest\",\"XI. kerület\",\"XI. kerület\",3352,3352,\"0\",\"0\""};
-    MyNetwork::NetworkRecord nw = line_parser.parse_line(
-        "135061,22785,108177,\"7\",3,\"\",\"\",108,\"F\",\"NNNNNNN\",50,0,22,0,0,0,"
-        "\"Kamaraerdei\",\"út\",\"\",\"\",\"\",0,0,\"\",0,0,\"Budapest\",\"Budapest\",\"XXII. kerület\","
-        "\"XI. kerület\",3363,3352,\"0\",\"0\"");
-
     EXPECT_EQ(nw.ID, 135061);
     EXPECT_EQ(nw.FROM_NODE, 22785);
     EXPECT_EQ(nw.TO_NODE, 108177);
@@ -46,4 +38,44 @@ TEST(LineParserTest, ReadSimpleLine)
     EXPECT_EQ(nw.ADMINIDX_R, 3352);
     EXPECT_EQ(nw.L_POSTAL_CODE, "0");
     EXPECT_EQ(nw.R_POSTAL_CODE, "0");
+}
+
+TEST(LineParserTest, ReadLineWithoutNewLine)
+{
+    MyNetwork::CellParser cp;
+    MyNetwork::LineParser line_parser{cp};
+    // std::string a_line{"515968,10986,390897,\"4\",3,\"\",\"\",110,\"F\",\"NNNNNNN\",50,0,45,0,0,0,\"Budaörsi\",\"út\",\"1\",\"\",\"\",0,0,\"\",0,0,\"Budapest\",\"Budapest\",\"XI. kerület\",\"XI. kerület\",3352,3352,\"0\",\"0\""};
+    MyNetwork::NetworkRecord nw = line_parser.parse_line(
+        "135061,22785,108177,\"7\",3,\"\",\"\",108,\"F\",\"NNNNNNN\",50,0,22,0,0,0,"
+        "\"Kamaraerdei\",\"út\",\"\",\"\",\"\",0,0,\"\",0,0,\"Budapest\",\"Budapest\",\"XXII. kerület\","
+        "\"XI. kerület\",3363,3352,\"0\",\"0\"");
+
+    assert_135061_record(nw);
+}
+
+TEST(LineParserTest, ReadLineWithNewLine)
+{
+    MyNetwork::CellParser cp;
+    MyNetwork::LineParser line_parser{cp};
+    // std::string a_line{"515968,10986,390897,\"4\",3,\"\",\"\",110,\"F\",\"NNNNNNN\",50,0,45,0,0,0,\"Budaörsi\",\"út\",\"1\",\"\",\"\",0,0,\"\",0,0,\"Budapest\",\"Budapest\",\"XI. kerület\",\"XI. kerület\",3352,3352,\"0\",\"0\""};
+    MyNetwork::NetworkRecord nw = line_parser.parse_line(
+        "135061,22785,108177,\"7\",3,\"\",\"\",108,\"F\",\"NNNNNNN\",50,0,22,0,0,0,"
+        "\"Kamaraerdei\",\"út\",\"\",\"\",\"\",0,0,\"\",0,0,\"Budapest\",\"Budapest\",\"XXII. kerület\","
+        "\"XI. kerület\",3363,3352,\"0\",\"0\"\r\n");
+
+    assert_135061_record(nw);
+}
+
+TEST(LineParserTest, ReadLineWithGibberishAtTheEnd)
+{
+    MyNetwork::CellParser cp;
+    MyNetwork::LineParser line_parser{cp};
+    // std::string a_line{"515968,10986,390897,\"4\",3,\"\",\"\",110,\"F\",\"NNNNNNN\",50,0,45,0,0,0,\"Budaörsi\",\"út\",\"1\",\"\",\"\",0,0,\"\",0,0,\"Budapest\",\"Budapest\",\"XI. kerület\",\"XI. kerület\",3352,3352,\"0\",\"0\""};
+    MyNetwork::NetworkRecord nw = line_parser.parse_line(
+        "135061,22785,108177,\"7\",3,\"\",\"\",108,\"F\",\"NNNNNNN\",50,0,22,0,0,0,"
+        "\"Kamaraerdei\",\"út\",\"\",\"\",\"\",0,0,\"\",0,0,\"Budapest\",\"Budapest\",\"XXII. kerület\","
+        "\"XI. kerület\",3363,3352,\"0\",\"0\"\nasd\r\nasd"
+        "blabla");
+
+    assert_135061_record(nw);
 }

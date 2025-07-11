@@ -10,7 +10,7 @@ namespace MyNetwork
     LineParser::LineParser(CellParser &cp) : cell_parser{cp} {};
     NetworkRecord LineParser::parse_line(const std::string &a_line)
     {
-        std::istringstream line_stream{a_line};
+        std::istringstream line_stream{trim_end(a_line)};
         NetworkRecord nw;
 
         nw.ID = cell_parser.read_cell_int(line_stream);
@@ -49,5 +49,11 @@ namespace MyNetwork
         nw.R_POSTAL_CODE = cell_parser.read_cell_string(line_stream);
 
         return nw;
+    }
+    inline std::string LineParser::trim_end(const std::string &a_line)
+    {
+        char last_meaningful = '"';
+        size_t last_meaningful_index = a_line.find_last_of(last_meaningful);
+        return std::string(a_line.begin(), a_line.begin() + last_meaningful_index + 1);
     }
 }

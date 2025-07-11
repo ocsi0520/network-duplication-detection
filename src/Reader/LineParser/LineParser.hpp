@@ -8,10 +8,11 @@ namespace MyNetwork
     class LineParser
     {
     public:
-        LineParser(CellParser&);
+        LineParser(CellParser &);
         NetworkRecord parse_line(const std::string &a_line);
 
     private:
         CellParser &cell_parser;
+        inline std::string trim_end(const std::string &a_line);
     };
 }
