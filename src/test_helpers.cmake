@@ -1,3 +1,15 @@
+# Enable testing
+include(CTest)
+enable_testing()
+
+# GoogleTest via FetchContent
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
+)
+FetchContent_MakeAvailable(googletest)
+
 function(register_module_tests module_name module_dir)
     file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS
         "${module_dir}/*__tests__/*.cpp"
