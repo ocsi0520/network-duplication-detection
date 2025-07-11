@@ -1,4 +1,4 @@
-add_library(reader STATIC LineParser/LineParser.cpp CellParser/CellParser.cpp)
+add_library(reader STATIC StreamReader.cpp LineParser/LineParser.cpp CellParser/CellParser.cpp)
 
 target_include_directories(
     reader
