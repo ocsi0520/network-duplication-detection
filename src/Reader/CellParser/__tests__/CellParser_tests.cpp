@@ -79,6 +79,28 @@ TEST(CellParserTest, ReadCharFromMissingStartingQuotion)
     }
 }
 
+TEST(CellParserTest, ReadRequiredCharFromEmpty)
+{
+    MyNetwork::CellParser cp;
+    std::istringstream empty_line{"\"\""};
+    try
+    {
+        cp.read_cell_char(empty_line, true);
+        throw std::logic_error{"It should have thrown an error"};
+    }
+    catch (std::invalid_argument &ia)
+    {
+        EXPECT_STREQ(ia.what(), "character required");
+    }
+}
+
+TEST(CellParserTest, ReadOptionalCharFromEmpty)
+{
+    MyNetwork::CellParser cp;
+    std::istringstream empty_line{"\"\""};
+    EXPECT_EQ(cp.read_cell_char(empty_line), '\0');
+}
+
 TEST(CellParserTest, ReadCharProperly)
 {
     MyNetwork::CellParser cp;
