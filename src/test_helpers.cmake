@@ -1,8 +1,3 @@
-# Enable testing
-include(CTest)
-enable_testing()
-
-# GoogleTest via FetchContent
 include(FetchContent)
 FetchContent_Declare(
   googletest

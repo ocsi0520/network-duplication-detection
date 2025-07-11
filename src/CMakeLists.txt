@@ -1,6 +1,5 @@
-
 # Load test registration helper
-include(${CMAKE_CURRENT_LIST_DIR}/test_helpers.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/test_helpers.cmake)
 
 add_executable(network_duplication main.cpp)
 
