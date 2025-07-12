@@ -8,6 +8,7 @@ FetchContent_MakeAvailable(googletest)
 function(register_module_tests module_name module_dir)
     file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS
         "${module_dir}/*__tests__/*.cpp"
+        "${module_dir}/**/*__tests__*/*.cpp"
     )
 
     if(TEST_SOURCES)
