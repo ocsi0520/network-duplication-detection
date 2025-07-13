@@ -65,22 +65,20 @@ std::vector<Segment> get_sorted_segments(const std::vector<MyNetwork::NetworkRec
     return sv;
 }
 
-// TODO: rename
-// to sorted_segments
-std::vector<Segment> get_unique_duplications(std::vector<Segment> &sv)
+std::vector<Segment> get_unique_duplications(std::vector<Segment> &sorted_segments)
 {
     SegmentMerger segment_merger;
     std::vector<Segment> duplicate_segments;
-    Segment duplicate_accumulator = sv[0];
-    std::for_each(sv.begin() + 1, sv.end(), [&](const Segment &current)
+    Segment duplicate_accumulator = sorted_segments[0];
+    std::for_each(sorted_segments.begin() + 1, sorted_segments.end(), [&](const Segment &current)
                   {
                     const auto& duplicate = detect_duplicates(segment_merger, duplicate_accumulator, current);
                     if (duplicate.has_value())
                         duplicate_segments.push_back(duplicate.value()); });
 
     std::vector<Segment> deduped;
-    Segment previous = *sv.begin();
-    std::for_each(sv.begin() + 1, sv.end(), [&](Segment &current)
+    Segment previous = *sorted_segments.begin();
+    std::for_each(sorted_segments.begin() + 1, sorted_segments.end(), [&](Segment &current)
                   {
         if (segment_merger.is_contiguous(previous, current)) {
             auto merged = segment_merger.union_segment(previous, current);
