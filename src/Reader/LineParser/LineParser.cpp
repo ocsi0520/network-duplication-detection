@@ -29,8 +29,8 @@ namespace MyNetwork
         nw.FROM_LEVEL = cell_parser.read_cell_int(line_stream);
         nw.TO_LEVEL = cell_parser.read_cell_int(line_stream);
         nw._not_documented_2 = cell_parser.read_cell_int(line_stream);
-        nw.STRET_NAME = cell_parser.read_cell_string(line_stream);
-        nw.STRET_TYPE = cell_parser.read_cell_string(line_stream);
+        nw.STREET_NAME = cell_parser.read_cell_string(line_stream);
+        nw.STREET_TYPE = cell_parser.read_cell_string(line_stream);
         nw.ROAD_NAME = cell_parser.read_cell_string(line_stream);
         nw.ALT_NAME = cell_parser.read_cell_string(line_stream);
         nw.SCHEMELEFT = cell_parser.read_cell_char(line_stream);

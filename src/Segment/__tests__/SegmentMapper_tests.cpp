@@ -12,8 +12,8 @@ NetworkRecord create_network_record(
 )
 {
     NetworkRecord nr;
-    nr.STRET_NAME = street_name;
-    nr.STRET_TYPE = street_type;
+    nr.STREET_NAME = street_name;
+    nr.STREET_TYPE = street_type;
 
     nr.SCHEMELEFT = left_parity;
     nr.FROMLEFT = left_from;
