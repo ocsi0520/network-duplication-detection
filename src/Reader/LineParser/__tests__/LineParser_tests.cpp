@@ -20,8 +20,8 @@ void assert_135061_record(const MyNetwork::NetworkRecord &nw)
     EXPECT_EQ(nw.FROM_LEVEL, 0);
     EXPECT_EQ(nw.TO_LEVEL, 0);
     EXPECT_EQ(nw._not_documented_2, 0);
-    EXPECT_EQ(nw.STRET_NAME, "Kamaraerdei");
-    EXPECT_EQ(nw.STRET_TYPE, "út");
+    EXPECT_EQ(nw.STREET_NAME, "Kamaraerdei");
+    EXPECT_EQ(nw.STREET_TYPE, "út");
     EXPECT_EQ(nw.ROAD_NAME, "");
     EXPECT_EQ(nw.ALT_NAME, "");
     EXPECT_EQ(nw.SCHEMELEFT, '\0');

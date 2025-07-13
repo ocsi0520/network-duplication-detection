@@ -21,8 +21,8 @@ namespace MyNetwork
     int FROM_LEVEL;
     int TO_LEVEL;
     int _not_documented_2;
-    std::string STRET_NAME;
-    std::string STRET_TYPE;
+    std::string STREET_NAME;
+    std::string STREET_TYPE;
     std::string ROAD_NAME;
     std::string ALT_NAME;
     char SCHEMELEFT;
