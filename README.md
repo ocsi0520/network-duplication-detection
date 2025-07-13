@@ -14,6 +14,8 @@ cmake --build build
 
 ## Test
 
+For testing I used [google test](https://google.github.io/googletest/). It can be executed with the command:
+
 ```bash
 ctest --test-dir build --output-on-failure
 ```
