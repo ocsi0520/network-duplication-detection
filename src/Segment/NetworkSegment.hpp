@@ -19,9 +19,11 @@ namespace MyNetwork
     struct Segment
     {
         decltype(NetworkRecord::L_POSTAL_CODE) postal_code;
-        decltype(NetworkRecord::FROMLEFT) from_street_number;
-        decltype(NetworkRecord::TOLEFT) to_street_number;
         std::string STREET_NAME_AND_TYPE;
         Parity parity;
+        decltype(NetworkRecord::FROMLEFT) from_street_number;
+        decltype(NetworkRecord::TOLEFT) to_street_number;
     };
 }
+
+std::ostream& operator<<(std::ostream& os, const MyNetwork::Segment&);
