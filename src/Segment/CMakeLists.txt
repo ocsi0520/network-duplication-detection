@@ -1,4 +1,4 @@
-add_library(segment STATIC NetworkSegment.cpp)
+add_library(segment STATIC SegmentMapper.cpp NetworkSegment.cpp)
 
 target_include_directories(
     segment
