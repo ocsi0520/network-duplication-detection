@@ -21,6 +21,7 @@ namespace MyNetwork
     int FROM_LEVEL;
     int TO_LEVEL;
     int _not_documented_2;
+    // TODO: typo STREET not STRET
     std::string STRET_NAME;
     std::string STRET_TYPE;
     std::string ROAD_NAME;
