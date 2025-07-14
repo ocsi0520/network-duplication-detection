@@ -3,8 +3,6 @@
 #include <vector>
 #include <string>
 
-// TODO: use forward iterator instead of vector
-
 namespace MyNetwork
 {
     enum class Parity
@@ -18,12 +16,14 @@ namespace MyNetwork
 
     struct Segment
     {
-        decltype(NetworkRecord::L_POSTAL_CODE) postal_code;
+        std::string postal_code;
         std::string STREET_NAME_AND_TYPE;
         Parity parity;
-        decltype(NetworkRecord::FROMLEFT) from_street_number;
-        decltype(NetworkRecord::TOLEFT) to_street_number;
+        int from_street_number;
+        int to_street_number;
+
+        auto operator<=>(const MyNetwork::Segment &) const = default;
     };
 }
 
-std::ostream& operator<<(std::ostream& os, const MyNetwork::Segment&);
+std::ostream &operator<<(std::ostream &os, const MyNetwork::Segment &);

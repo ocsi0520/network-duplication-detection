@@ -6,10 +6,20 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 function(register_module_tests module_name module_dir)
+    set(optional_extra_test_deps ${ARGV2})  # get the 3rd argument manually (if provided)
+
     file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS
         "${module_dir}/*__tests__/*.cpp"
         "${module_dir}/**/*__tests__*/*.cpp"
     )
+
+    if(optional_extra_test_deps)
+        file(GLOB_RECURSE EXTRA_TEST_SOURCES CONFIGURE_DEPENDS
+            "${optional_extra_test_deps}/*__tests__/*.cpp"
+            "${optional_extra_test_deps}/**/*__tests__*/*.cpp"
+        )
+        list(APPEND TEST_SOURCES ${EXTRA_TEST_SOURCES})
+    endif()
 
     if(TEST_SOURCES)
         set(target_name "${module_name}_tests")
