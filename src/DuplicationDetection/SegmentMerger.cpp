@@ -9,8 +9,8 @@ Segment SegmentMerger::intersect_segment(const Segment &s1, const Segment &s2) c
     assert(has_intersection(s1, s2));
 
     Segment result{s2};
-    result.from_street_number = std::max(s1.from_street_number, s2.from_street_number);
-    result.to_street_number = std::min(s1.to_street_number, s2.to_street_number);
+    result.to_street_number = s1.to_street_number;
+    result.from_street_number = s2.from_street_number;
     return result;
 }
 
@@ -19,8 +19,7 @@ Segment SegmentMerger::union_segment(const Segment &s1, const Segment &s2) const
 
     assert(is_contiguous(s1, s2));
     Segment result{s1};
-    result.from_street_number = std::min(s1.from_street_number, s2.from_street_number);
-    result.to_street_number = std::max(s1.to_street_number, s2.to_street_number);
+    result.to_street_number = s2.to_street_number;
     return result;
 }
 

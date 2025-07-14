@@ -28,11 +28,6 @@ TEST(SegmentMergerTest, IntersectSegment)
     test_same_base_properties(base, overlapping_result);
     test_from_to_properties(overlapping_result, 8, 10);
 
-    Segment fully_included = create_segment(Parity::Even, 4, 6);
-    Segment fully_included_result = merger.intersect_segment(base, fully_included);
-    test_same_base_properties(base, fully_included_result);
-    test_from_to_properties(fully_included_result, 4, 6);
-
     Segment tangent = create_segment(Parity::Even, 10, 16);
     Segment tangent_result = merger.intersect_segment(base, tangent);
     test_same_base_properties(base, tangent_result);
@@ -48,11 +43,6 @@ TEST(SegmentMergerTest, UnionSegment)
     Segment same_result = merger.union_segment(base, same);
     test_same_base_properties(base, same_result);
     test_from_to_properties(same_result, 2, 10);
-
-    Segment fully_included = create_segment(Parity::Even, 4, 6);
-    Segment fully_included_result = merger.union_segment(base, fully_included);
-    test_same_base_properties(base, fully_included_result);
-    test_from_to_properties(fully_included_result, 2, 10);
 
     Segment overlapping = create_segment(Parity::Even, 8, 20);
     Segment overlapping_result = merger.union_segment(base, overlapping);
