@@ -31,7 +31,7 @@ std::optional<Segment> detect_duplicates(const SegmentMerger &segment_merger, Se
     }
 
     // No duplicate
-    return std::optional<Segment>{};
+    return {};
 }
 
 std::vector<Segment> get_sorted_segments(const std::vector<MyNetwork::NetworkRecord> &data)
@@ -45,22 +45,7 @@ std::vector<Segment> get_sorted_segments(const std::vector<MyNetwork::NetworkRec
         auto segments = segment_mapper.map_from_record(nw);
         std::copy(segments.begin(), segments.end(), std::back_inserter(sv)); });
 
-    std::sort(sv.begin(), sv.end(), [](const Segment &s1, const Segment &s2)
-              {
-        if (s1.postal_code != s2.postal_code)
-            return s1.postal_code < s2.postal_code;
-
-        if (s1.STREET_NAME_AND_TYPE != s2.STREET_NAME_AND_TYPE)
-            return s1.STREET_NAME_AND_TYPE < s2.STREET_NAME_AND_TYPE;
-
-        if (s1.parity != s2.parity)
-            return s1.parity < s2.parity;
-
-        if (s1.from_street_number != s2.from_street_number)
-            return s1.from_street_number < s2.from_street_number;
-
-        
-            return s1.to_street_number < s2.to_street_number; });
+    std::sort(sv.begin(), sv.end());
 
     return sv;
 }
