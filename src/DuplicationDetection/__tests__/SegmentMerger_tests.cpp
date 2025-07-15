@@ -3,6 +3,22 @@
 #include "NetworkSegment.hpp"
 #include "Segment/__tests__/TestSegment.hpp"
 
+/*
+  legends for test:
+
+  base:                                      |<----------------->|
+  same:                                      |<----------------->|
+  super:                                  <--|-------------------|--->
+  adj_left:                          <-----> |                   |
+  adj_right:                                 |                   | <----->
+  tangent_left:                       <----->|                   |
+  tangent_right:                             |                   |<----->
+  overlaps_left:                         <---|----->             |
+  overlaps_right:                            |               <---|----->
+  far_left:             <-------->           |                   |
+  far_right:                                 |                   |     <------>
+*/
+
 using namespace MyNetwork;
 
 void test_same_base_properties(const Segment &s1, const Segment &s2)
@@ -18,127 +34,165 @@ void test_from_to_properties(const Segment &s, int expected_from, int expected_t
     EXPECT_EQ(s.to_street_number, expected_to);
 }
 
-TEST(SegmentMergerTest, IntersectSegment)
+TEST(SegmentMergerTest, IsMergeableEven)
 {
     SegmentMerger merger;
-    Segment base = create_segment(Parity::Even, 2, 10);
+    Segment base = create_segment(Parity::Even, 30, 50);
 
-    Segment overlapping = create_segment(Parity::Even, 8, 20);
-    Segment overlapping_result = merger.intersect_segment(base, overlapping);
-    test_same_base_properties(base, overlapping_result);
-    test_from_to_properties(overlapping_result, 8, 10);
+    Segment same = create_segment(Parity::Even, 30, 50);
+    EXPECT_TRUE(merger.is_mergeable(base, same));
+    Segment sub = create_segment(Parity::Even, 40, 48);
+    EXPECT_TRUE(merger.is_mergeable(base, sub));
+    Segment super = create_segment(Parity::Even, 20, 60);
+    EXPECT_TRUE(merger.is_mergeable(base, super));
 
-    Segment tangent = create_segment(Parity::Even, 10, 16);
-    Segment tangent_result = merger.intersect_segment(base, tangent);
-    test_same_base_properties(base, tangent_result);
-    test_from_to_properties(tangent_result, 10, 10);
+    Segment adjacent_from_left = create_segment(Parity::Even, 20, 28);
+    EXPECT_TRUE(merger.is_mergeable(base, adjacent_from_left));
+    Segment adjacent_from_right = create_segment(Parity::Even, 52, 58);
+    EXPECT_TRUE(merger.is_mergeable(base, adjacent_from_right));
+
+    Segment tangent_from_left = create_segment(Parity::Even, 20, 30);
+    EXPECT_TRUE(merger.is_mergeable(base, tangent_from_left));
+    Segment tangent_from_right = create_segment(Parity::Even, 50, 58);
+    EXPECT_TRUE(merger.is_mergeable(base, tangent_from_right));
+
+    Segment overlaps_from_left = create_segment(Parity::Even, 20, 36);
+    EXPECT_TRUE(merger.is_mergeable(base, overlaps_from_left));
+    Segment overlaps_from_right = create_segment(Parity::Even, 44, 58);
+    EXPECT_TRUE(merger.is_mergeable(base, overlaps_from_right));
+
+    Segment far_from_left = create_segment(Parity::Even, 20, 26);
+    EXPECT_FALSE(merger.is_mergeable(base, far_from_left));
+
+    Segment far_from_right = create_segment(Parity::Even, 54, 58);
+    EXPECT_FALSE(merger.is_mergeable(base, far_from_right));
 }
 
-TEST(SegmentMergerTest, UnionSegment)
+TEST(SegmentMergerTest, IsMergeableMixedFar)
 {
     SegmentMerger merger;
-    Segment base = create_segment(Parity::Even, 2, 10);
+    Segment base = create_segment(Parity::Mixed, 30, 50);
 
-    Segment same = create_segment(Parity::Even, 2, 10);
-    Segment same_result = merger.union_segment(base, same);
-    test_same_base_properties(base, same_result);
-    test_from_to_properties(same_result, 2, 10);
+    Segment adjacent_from_left = create_segment(Parity::Mixed, 20, 29);
+    EXPECT_TRUE(merger.is_mergeable(base, adjacent_from_left));
+    Segment adjacent_from_right = create_segment(Parity::Mixed, 51, 58);
+    EXPECT_TRUE(merger.is_mergeable(base, adjacent_from_right));
 
-    Segment overlapping = create_segment(Parity::Even, 8, 20);
-    Segment overlapping_result = merger.union_segment(base, overlapping);
-    test_same_base_properties(base, overlapping_result);
-    test_from_to_properties(overlapping_result, 2, 20);
+    Segment far_from_left = create_segment(Parity::Mixed, 20, 28);
+    EXPECT_FALSE(merger.is_mergeable(base, far_from_left));
 
-    Segment tangent = create_segment(Parity::Even, 10, 16);
-    Segment tangent_result = merger.union_segment(base, tangent);
-    test_same_base_properties(base, tangent_result);
-    test_from_to_properties(tangent_result, 2, 16);
-
-    Segment adjacent = create_segment(Parity::Even, 12, 32);
-    Segment adjacent_result = merger.union_segment(base, adjacent);
-    test_same_base_properties(base, adjacent_result);
-    test_from_to_properties(adjacent_result, 2, 32);
+    Segment far_from_right = create_segment(Parity::Mixed, 52, 58);
+    EXPECT_FALSE(merger.is_mergeable(base, far_from_right));
 }
 
-TEST(SegmentMergerTest, IsContiguousEven)
+TEST(SegmentMergerTest, MergeEven)
 {
     SegmentMerger merger;
-    Segment base = create_segment(Parity::Even, 2, 10);
+    Segment base = create_segment(Parity::Even, 30, 50);
 
-    Segment same = create_segment(Parity::Even, 2, 10);
-    EXPECT_TRUE(merger.is_contiguous(base, same));
+    Segment same = create_segment(Parity::Even, 30, 50);
+    EXPECT_EQ(merger.merge_segments(base, same), base);
 
-    Segment fully_included = create_segment(Parity::Even, 4, 8);
-    EXPECT_TRUE(merger.is_contiguous(base, fully_included));
+    Segment sub = create_segment(Parity::Even, 40, 48);
+    EXPECT_EQ(merger.merge_segments(base, sub), base);
+    Segment super = create_segment(Parity::Even, 20, 60);
+    EXPECT_EQ(merger.merge_segments(base, super), super);
 
-    Segment tangent = create_segment(Parity::Even, 10, 16);
-    EXPECT_TRUE(merger.is_contiguous(base, tangent));
+    Segment adjacent_from_left = create_segment(Parity::Even, 20, 28);
+    EXPECT_EQ(merger.merge_segments(base, adjacent_from_left), create_segment(Parity::Even, 20, 50));
 
-    Segment adjacent = create_segment(Parity::Even, 12, 20);
-    EXPECT_TRUE(merger.is_contiguous(base, adjacent));
+    Segment adjacent_from_right = create_segment(Parity::Even, 52, 58);
+    EXPECT_EQ(merger.merge_segments(base, adjacent_from_right), create_segment(Parity::Even, 30, 58));
 
-    Segment overlapping = create_segment(Parity::Even, 6, 16);
-    EXPECT_TRUE(merger.is_contiguous(base, overlapping));
-
-    Segment far = create_segment(Parity::Even, 14, 20);
-    EXPECT_FALSE(merger.is_contiguous(base, far));
+    Segment tangent_from_left = create_segment(Parity::Even, 20, 30);
+    EXPECT_EQ(merger.merge_segments(base, tangent_from_left), create_segment(Parity::Even, 20, 50));
+    Segment tangent_from_right = create_segment(Parity::Even, 50, 58);
+    EXPECT_EQ(merger.merge_segments(base, tangent_from_right), create_segment(Parity::Even, 30, 58));
 }
 
-TEST(SegmentMergerTest, IsContiguousMixed)
+TEST(SegmentMergerTest, MergeAdjacentAtMixed)
 {
     SegmentMerger merger;
-    Segment base = create_segment(Parity::Mixed, 2, 9);
+    Segment base = create_segment(Parity::Mixed, 30, 50);
 
-    Segment same = create_segment(Parity::Mixed, 2, 9);
-    EXPECT_TRUE(merger.is_contiguous(base, same));
+    Segment adjacent_from_left = create_segment(Parity::Mixed, 20, 29);
+    EXPECT_EQ(merger.merge_segments(base, adjacent_from_left), create_segment(Parity::Mixed, 20, 50));
 
-    Segment fully_included = create_segment(Parity::Mixed, 4, 8);
-    EXPECT_TRUE(merger.is_contiguous(base, fully_included));
-
-    Segment tangent = create_segment(Parity::Mixed, 9, 14);
-    EXPECT_TRUE(merger.is_contiguous(base, tangent));
-
-    Segment adjacent = create_segment(Parity::Mixed, 10, 20);
-    EXPECT_TRUE(merger.is_contiguous(base, adjacent));
-
-    Segment overlapping = create_segment(Parity::Mixed, 6, 16);
-    EXPECT_TRUE(merger.is_contiguous(base, overlapping));
-
-    Segment far = create_segment(Parity::Mixed, 11, 20);
-    EXPECT_FALSE(merger.is_contiguous(base, far));
+    Segment adjacent_from_right = create_segment(Parity::Mixed, 51, 58);
+    EXPECT_EQ(merger.merge_segments(base, adjacent_from_right), create_segment(Parity::Mixed, 30, 58));
 }
 
-TEST(SegmentMergerTest, IsContiguousDifferentLocation)
+TEST(SegmentMergerTest, HasDuplicationEven)
 {
     SegmentMerger merger;
-    Segment base_segment = create_segment(Parity::Even, 2, 10, "1045", "Kossuth utca");
-    Segment different_street = create_segment(Parity::Even, 12, 20, "1045", "Petőfi utca");
-    EXPECT_FALSE(merger.is_contiguous(base_segment, different_street));
-    Segment different_postal_code = create_segment(Parity::Even, 12, 20, "4046", "Kossuth utca");
-    EXPECT_FALSE(merger.is_contiguous(base_segment, different_postal_code));
-    Segment different_parity = create_segment(Parity::Odd, 11, 21, "1045", "Kossuth utca");
-    EXPECT_FALSE(merger.is_contiguous(base_segment, different_parity));
+    Segment base = create_segment(Parity::Even, 30, 50);
+
+    Segment same = create_segment(Parity::Even, 30, 50);
+    EXPECT_TRUE(merger.has_duplication(base, same));
+    Segment sub = create_segment(Parity::Even, 40, 48);
+    EXPECT_TRUE(merger.has_duplication(base, sub));
+    Segment super = create_segment(Parity::Even, 20, 60);
+    EXPECT_TRUE(merger.has_duplication(base, super));
+
+    Segment adjacent_from_left = create_segment(Parity::Even, 20, 28);
+    EXPECT_FALSE(merger.has_duplication(base, adjacent_from_left));
+    Segment adjacent_from_right = create_segment(Parity::Even, 52, 58);
+    EXPECT_FALSE(merger.has_duplication(base, adjacent_from_right));
+
+    Segment tangent_from_left = create_segment(Parity::Even, 20, 30);
+    EXPECT_TRUE(merger.has_duplication(base, tangent_from_left));
+    Segment tangent_from_right = create_segment(Parity::Even, 50, 58);
+    EXPECT_TRUE(merger.has_duplication(base, tangent_from_right));
+
+    Segment overlaps_from_left = create_segment(Parity::Even, 20, 36);
+    EXPECT_TRUE(merger.has_duplication(base, overlaps_from_left));
+    Segment overlaps_from_right = create_segment(Parity::Even, 44, 58);
+    EXPECT_TRUE(merger.has_duplication(base, overlaps_from_right));
+
+    Segment far_from_left = create_segment(Parity::Even, 20, 26);
+    EXPECT_FALSE(merger.has_duplication(base, far_from_left));
+
+    Segment far_from_right = create_segment(Parity::Even, 54, 58);
+    EXPECT_FALSE(merger.has_duplication(base, far_from_right));
 }
 
-TEST(SegmentMergerTest, HasIntersection)
+TEST(SegmentMergerTest, HasDuplicationMixed)
 {
     SegmentMerger merger;
-    Segment base = create_segment(Parity::Even, 2, 10);
+    Segment base = create_segment(Parity::Mixed, 30, 50);
 
-    Segment same = create_segment(Parity::Even, 2, 10);
-    EXPECT_TRUE(merger.has_intersection(base, same));
+    Segment adjacent_from_left = create_segment(Parity::Mixed, 20, 29);
+    EXPECT_FALSE(merger.has_duplication(base, adjacent_from_left));
+    Segment adjacent_from_right = create_segment(Parity::Mixed, 51, 58);
+    EXPECT_FALSE(merger.has_duplication(base, adjacent_from_right));
 
-    Segment fully_included = create_segment(Parity::Even, 4, 8);
-    EXPECT_TRUE(merger.has_intersection(base, fully_included));
+    Segment far_from_left = create_segment(Parity::Mixed, 20, 28);
+    EXPECT_FALSE(merger.has_duplication(base, far_from_left));
 
-    Segment overlapping = create_segment(Parity::Even, 8, 20);
-    EXPECT_TRUE(merger.has_intersection(base, overlapping));
+    Segment overlaps_from_left = create_segment(Parity::Mixed, 29, 31);
+    EXPECT_TRUE(merger.has_duplication(base, overlaps_from_left));
+    Segment overlaps_from_right = create_segment(Parity::Mixed, 49, 51);
+    EXPECT_TRUE(merger.has_duplication(base, overlaps_from_right));
 
-    Segment tangent = create_segment(Parity::Even, 10, 16);
-    EXPECT_TRUE(merger.has_intersection(base, tangent));
+    Segment far_from_right = create_segment(Parity::Mixed, 52, 58);
+    EXPECT_FALSE(merger.has_duplication(base, far_from_right));
+}
 
-    Segment adjacent = create_segment(Parity::Even, 12, 20);
-    EXPECT_FALSE(merger.has_intersection(base, adjacent));
+TEST(SegmentMergerTest, GetDuplicatesForEven)
+{
+    SegmentMerger merger;
+    Segment base = create_segment(Parity::Even, 30, 50);
 
-    // far: 14-20 can't be as it's not contiguous with base
+    Segment same = create_segment(Parity::Even, 30, 50);
+    EXPECT_EQ(merger.get_duplicate_segment_from(base, same), base);
+
+    Segment sub = create_segment(Parity::Even, 40, 48);
+    EXPECT_EQ(merger.get_duplicate_segment_from(base, sub), sub);
+    Segment super = create_segment(Parity::Even, 20, 60);
+    EXPECT_EQ(merger.get_duplicate_segment_from(base, super), base);
+
+    Segment tangent_from_left = create_segment(Parity::Even, 20, 30);
+    EXPECT_EQ(merger.get_duplicate_segment_from(base, tangent_from_left), create_segment(Parity::Even, 30, 30));
+    Segment tangent_from_right = create_segment(Parity::Even, 50, 58);
+    EXPECT_EQ(merger.get_duplicate_segment_from(base, tangent_from_right), create_segment(Parity::Even, 50, 50));
 }
