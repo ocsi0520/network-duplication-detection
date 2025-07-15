@@ -18,6 +18,13 @@ function(register_module_tests module_name module_dir)
             "${optional_extra_test_deps}/*__tests__/*.cpp"
             "${optional_extra_test_deps}/**/*__tests__*/*.cpp"
         )
+        # Exclude files ending with `_tests.cpp`
+        foreach(file_path ${EXTRA_TEST_SOURCES})
+            if(file_path MATCHES "_tests\\.cpp$")
+                list(REMOVE_ITEM EXTRA_TEST_SOURCES "${file_path}")
+            endif()
+        endforeach()
+
         list(APPEND TEST_SOURCES ${EXTRA_TEST_SOURCES})
     endif()
 
