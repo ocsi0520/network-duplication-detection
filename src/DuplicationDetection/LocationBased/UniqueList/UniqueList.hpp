@@ -11,8 +11,8 @@ namespace MyNetwork
     public:
         UniqueList(SegmentMerger);
         void add_segment(Segment);
-        const std::deque<Segment> &get_all_traversed();
-        const std::deque<Segment> &get_all_duplications();
+        const std::deque<Segment> &get_all_traversed() const;
+        const std::deque<Segment> &get_all_duplications() const;
 
     private:
         std::vector<Segment> insert_segment_into_list(std::deque<Segment> &list, Segment segment);

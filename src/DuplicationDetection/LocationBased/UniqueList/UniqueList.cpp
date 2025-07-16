@@ -67,12 +67,12 @@ std::vector<Segment> UniqueList::insert_segment_into_list(std::deque<Segment> &l
     return current_duplications;
 }
 
-const std::deque<Segment> &UniqueList::get_all_traversed()
+const std::deque<Segment> &UniqueList::get_all_traversed() const
 {
     return all_traversed;
 }
 
-const std::deque<Segment> &UniqueList::get_all_duplications()
+const std::deque<Segment> &UniqueList::get_all_duplications() const
 {
     return duplications;
 }
