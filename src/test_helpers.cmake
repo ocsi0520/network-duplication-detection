@@ -5,28 +5,51 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
+function (get_all_test_files_from a_module_dir result)
+file(GLOB_RECURSE ALL_CPP_FILES CONFIGURE_DEPENDS
+    "${a_module_dir}/*.cpp"
+    )
+
+    set(TEST_SOURCES "")
+    foreach(file ${ALL_CPP_FILES})
+        get_filename_component(dir "${file}" DIRECTORY)
+        if(dir MATCHES ".*/.*__tests__.*(/|$)")
+            list(APPEND TEST_SOURCES "${file}")
+        endif()
+    endforeach()
+
+    set(${result} ${TEST_SOURCES} PARENT_SCOPE)
+endfunction()
+
+function (get_test_helper_files_from a_module_dir result)
+    get_all_test_files_from(${a_module_dir} EXTRA_TEST_SOURCES)
+
+    # Exclude files ending with `_tests.cpp`
+    foreach(file_path ${EXTRA_TEST_SOURCES})
+        if(file_path MATCHES "_tests\\.cpp$")
+            list(REMOVE_ITEM EXTRA_TEST_SOURCES "${file_path}")
+        endif()
+    endforeach()
+
+    set(${result} ${EXTRA_TEST_SOURCES} PARENT_SCOPE)
+endfunction()
+
 function(register_module_tests module_name module_dir)
     set(optional_extra_test_deps ${ARGV2})  # get the 3rd argument manually (if provided)
 
-    file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS
-        "${module_dir}/*__tests__/*.cpp"
-        "${module_dir}/**/*__tests__*/*.cpp"
-    )
-
+    get_all_test_files_from(${module_dir} TEST_SOURCES)
+    
     if(optional_extra_test_deps)
-        file(GLOB_RECURSE EXTRA_TEST_SOURCES CONFIGURE_DEPENDS
-            "${optional_extra_test_deps}/*__tests__/*.cpp"
-            "${optional_extra_test_deps}/**/*__tests__*/*.cpp"
-        )
-        # Exclude files ending with `_tests.cpp`
-        foreach(file_path ${EXTRA_TEST_SOURCES})
-            if(file_path MATCHES "_tests\\.cpp$")
-                list(REMOVE_ITEM EXTRA_TEST_SOURCES "${file_path}")
-            endif()
-        endforeach()
-
+        get_test_helper_files_from(${optional_extra_test_deps} EXTRA_TEST_SOURCES)
         list(APPEND TEST_SOURCES ${EXTRA_TEST_SOURCES})
     endif()
+
+    # debug
+    # message("!!!!!!! ${module_dir} \n")
+    # foreach(file_path ${TEST_SOURCES})
+    #     message("found this: " ${file_path})
+    # endforeach()
+    # message("==============================\n")
 
     if(TEST_SOURCES)
         set(target_name "${module_name}_tests")
