@@ -1,4 +1,4 @@
-add_library(duplication_detection STATIC SegmentMerger.cpp LocationBased/UniqueList/UniqueList.cpp)
+add_library(duplication_detection STATIC SegmentMerger.cpp LocationBased/UniqueList/UniqueList.cpp LocationBased/SegmentGroup/SegmentGroup.cpp)
 
 target_include_directories(
     duplication_detection
