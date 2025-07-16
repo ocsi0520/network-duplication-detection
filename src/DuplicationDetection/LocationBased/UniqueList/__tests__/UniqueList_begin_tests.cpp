@@ -77,4 +77,12 @@ TEST(UniqueListTest, InsertAfterBeginFullContain)
     test_list(ul.get_all_duplications(), {{15, 29}});
 }
 
-// // TODO: only first 3 segment merges
+TEST(UniqueListTest, InsertAfterBeginFullContain3)
+{
+    UniqueList ul = get_base_test_list();
+    ul.add_segment(create_same_type_segment(11, 93));
+    const auto& actual = ul.get_all_traversed();
+    const auto& expected = concat({{11, 93}}, slice(initial_intervals, 3));
+    test_list(actual, expected);
+    test_list(ul.get_all_duplications(), slice(initial_intervals, 0, 3));
+}

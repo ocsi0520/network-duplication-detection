@@ -59,6 +59,7 @@ std::vector<Segment> UniqueList::insert_segment_into_list(std::deque<Segment> &l
         else
         {
             list.erase(merge_candidate_it);
+            merge_candidate_it--;
         }
     }
     list.insert(merge_candidate_it + 1, new_s);
