@@ -10,5 +10,6 @@ namespace MyNetwork
         Segment merge_segments(const Segment &,const Segment &) const;
         bool is_mergeable(const Segment &,const Segment &) const;
         bool has_duplication(const Segment &, const Segment &) const;
+        int one_less_street_number(Parity parity, int street_number) const;
     };
 }

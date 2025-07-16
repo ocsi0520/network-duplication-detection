@@ -4,7 +4,7 @@
 
 using namespace MyNetwork;
 
-int one_less_street_number(Parity parity, int street_number)
+int SegmentMerger::one_less_street_number(const Parity parity, const int street_number) const
 {
     return parity == Parity::Mixed ? street_number - 1 : street_number - 2;
 }
