@@ -61,9 +61,6 @@ std::vector<Segment> UniqueList::insert_segment_into_list(std::deque<Segment> &l
             list.erase(merge_candidate_it);
         }
     }
-    // TODO: check with end
-    // emplace - does not copy when inserting
-    // insert copies data, then inserts it
     list.insert(merge_candidate_it + 1, new_s);
 
     return current_duplications;

@@ -45,11 +45,15 @@ function(register_module_tests module_name module_dir)
     endif()
 
     # debug
-    # message("!!!!!!! ${module_dir} \n")
-    # foreach(file_path ${TEST_SOURCES})
-    #     message("found this: " ${file_path})
-    # endforeach()
-    # message("==============================\n")
+    # message(${module_dir})
+    
+    # if(${module_dir} MATCHES ".*src/DuplicationDetection$")
+    #     message("!!!!!!! ${module_dir} \n")
+    #     foreach(file_path ${TEST_SOURCES})
+    #         message("found this: " ${file_path})
+    #     endforeach()
+    #     message("==============================\n")
+    # endif()
 
     if(TEST_SOURCES)
         set(target_name "${module_name}_tests")
