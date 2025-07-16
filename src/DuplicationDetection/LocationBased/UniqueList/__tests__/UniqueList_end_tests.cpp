@@ -19,8 +19,6 @@ TEST(UniqueListTest, InsertAfterEndAdjacent)
     EXPECT_TRUE(ul.get_all_duplications().empty());
 }
 
-////////////
-
 TEST(UniqueListTest, InsertAfterEndTangent)
 {
     UniqueList ul = get_base_test_list();
