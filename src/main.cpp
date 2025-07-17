@@ -8,35 +8,29 @@
 #include <algorithm>
 
 #include "SegmentMerger.hpp"
-#include <optional>
+
+#include "DuplicationDetection/LocationBased/UniqueList/UniqueListFactory.hpp"
+#include "DuplicationDetector.hpp"
 
 using namespace MyNetwork;
 
-// TODO: move implementation out of main.cpp
-
-std::optional<Segment> detect_duplicates(const SegmentMerger &segment_merger, Segment &accumulator, const Segment &current)
+std::vector<NetworkRecord> read_all_recrods()
 {
-    if (segment_merger.is_contiguous(accumulator, current))
+    std::ifstream file{"data/network_utf8.csv"};
+    if (!file)
     {
-        if (segment_merger.has_intersection(accumulator, current))
-        {
-            return segment_merger.intersect_segment(accumulator, current);
-        }
-
-        accumulator = segment_merger.union_segment(accumulator, current);
+        std::cout << "Could not open file" << std::endl;
+        return {};
     }
-    else
-    {
-        accumulator = current;
-    }
+    MyNetwork::CellParser cell_parser;
+    MyNetwork::LineParser line_parser{cell_parser};
+    MyNetwork::DataStreamReader reader{file, line_parser};
 
-    // No duplicate
-    return {};
+    return reader.read_data();
 }
 
-std::vector<Segment> get_sorted_segments(const std::vector<MyNetwork::NetworkRecord> &data)
+std::vector<Segment> map_network_records_to_segments(const std::vector<NetworkRecord> &data)
 {
-
     MyNetwork::SegmentMapper segment_mapper;
     std::vector<Segment> sv;
 
@@ -45,70 +39,31 @@ std::vector<Segment> get_sorted_segments(const std::vector<MyNetwork::NetworkRec
         auto segments = segment_mapper.map_from_record(nw);
         std::copy(segments.begin(), segments.end(), std::back_inserter(sv)); });
 
-    std::sort(sv.begin(), sv.end());
-
     return sv;
 }
 
-std::vector<Segment> get_unique_duplications(std::vector<Segment> &sorted_segments)
+std::vector<Segment> get_all_segments()
 {
-    SegmentMerger segment_merger;
-    std::vector<Segment> duplicate_segments;
-    Segment duplicate_accumulator = sorted_segments[0];
-    std::for_each(sorted_segments.begin() + 1, sorted_segments.end(), [&](const Segment &current)
-                  {
-                    const auto& duplicate = detect_duplicates(segment_merger, duplicate_accumulator, current);
-                    if (duplicate.has_value())
-                        duplicate_segments.push_back(duplicate.value()); });
-
-    std::vector<Segment> deduped;
-    Segment previous = *sorted_segments.begin();
-    std::for_each(sorted_segments.begin() + 1, sorted_segments.end(), [&](Segment &current)
-                  {
-        if (segment_merger.is_contiguous(previous, current)) {
-            auto merged = segment_merger.union_segment(previous, current);
-            auto& last_deduped = *deduped.rbegin();
-
-            if (deduped.empty()) {
-                deduped.push_back(merged);
-                return;
-            }
-            if (segment_merger.is_contiguous(last_deduped, merged)) {
-                last_deduped = segment_merger.union_segment(last_deduped, merged);
-            } else {
-                deduped.push_back(merged);
-            }
-        }
-
-        previous = current; });
-    return deduped;
+    return map_network_records_to_segments(read_all_recrods());
 }
 
 int main()
 {
-    std::ifstream file{"data/network_utf8.csv"};
-    if (!file)
+    // TODO: dependency injection
+    SegmentMerger sm{};
+    UniqueListFactory ul_f{sm};
+    SegmentGroupFactory sg_f{ul_f};
+    DuplicationDetector detector{sg_f};
+
+    for (const Segment &segment : get_all_segments())
     {
-        std::cout << "Could not open file" << std::endl;
-        return -1;
+        detector.add_segment(segment);
     }
-    MyNetwork::CellParser cell_parser;
-    MyNetwork::LineParser line_parser{cell_parser};
-    MyNetwork::DataStreamReader reader{file, line_parser};
 
-    auto data = reader.read_data();
-    std::cout << "read data size: " << data.size() << std::endl;
+    for (const Segment &duplicatum_segment : detector.get_all_duplications())
+    {
+        std::cout << duplicatum_segment << std::endl;
+    }
 
-    std::vector<Segment> sorted_segments{get_sorted_segments(data)};
-
-    if (sorted_segments.size() == 0)
-        return 0;
-
-    std::vector<Segment> duplicate_segments = get_unique_duplications(sorted_segments);
-
-    std::for_each(duplicate_segments.begin(), duplicate_segments.end(), [](const Segment &s)
-                  { std::cout << s << "\n"; });
-
-    std::cout << std::flush;
     return 0;
 }
