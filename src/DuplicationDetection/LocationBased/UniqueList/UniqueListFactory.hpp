@@ -8,7 +8,7 @@ namespace MyNetwork
     {
     public:
         // TODO: check this
-        UniqueListFactory(const SegmentMerger &sm = SegmentMerger{}) : merger{sm} {};
+        UniqueListFactory(const SegmentMerger &sm) : merger{sm} {};
         UniqueList create_unique_list()
         {
             return UniqueList{merger};
