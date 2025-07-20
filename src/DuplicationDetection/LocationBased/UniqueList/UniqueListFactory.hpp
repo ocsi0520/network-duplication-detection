@@ -7,12 +7,8 @@ namespace MyNetwork
     class UniqueListFactory
     {
     public:
-        // TODO: check this
-        UniqueListFactory(const SegmentMerger &sm) : merger{sm} {};
-        UniqueList create_unique_list()
-        {
-            return UniqueList{merger};
-        }
+        UniqueListFactory(const SegmentMerger &sm);
+        UniqueList create_unique_list();
 
     private:
         SegmentMerger merger;
