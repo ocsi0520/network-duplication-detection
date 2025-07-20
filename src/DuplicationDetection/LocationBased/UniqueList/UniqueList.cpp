@@ -5,8 +5,7 @@ using namespace MyNetwork;
 
 UniqueList::UniqueList(SegmentMerger sm) : merger{sm} {};
 
-// TODO: check whether const Segment&
-void UniqueList::add_segment(Segment new_s)
+void UniqueList::add_segment(const Segment& new_s)
 {
     auto first_level_duplications = insert_segment_into_list(all_traversed, new_s);
     for (auto &first_level_duplication : first_level_duplications)
