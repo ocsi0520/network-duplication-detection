@@ -9,5 +9,6 @@ TEST(UniqueListFactory, CreateUniqueList)
     SegmentMerger sm;
     UniqueListFactory factory{std::make_shared<SegmentMerger>()};
     auto result = factory.create_unique_list();
-    EXPECT_THAT(result, testing::A<UniqueList>());
+    using expected_type = std::unique_ptr<UniqueList>;
+    EXPECT_THAT(result, testing::A<expected_type>());
 }

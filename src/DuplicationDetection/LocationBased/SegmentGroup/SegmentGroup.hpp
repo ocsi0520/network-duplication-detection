@@ -8,7 +8,14 @@ namespace MyNetwork
     class SegmentGroup
     {
     public:
+        SegmentGroup(const SegmentGroup &) = delete;
+        SegmentGroup(SegmentGroup &&) = delete;
+
+        SegmentGroup &operator=(const SegmentGroup &) = delete;
+        SegmentGroup &operator=(SegmentGroup &&) = delete;
+
         SegmentGroup(UniqueListFactory);
+
         void add(const Segment &segment);
         const std::deque<Segment> get_all_duplications() const;
 

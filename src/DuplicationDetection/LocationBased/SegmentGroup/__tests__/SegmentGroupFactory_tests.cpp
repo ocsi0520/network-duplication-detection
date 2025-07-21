@@ -11,5 +11,6 @@ TEST(SegmentGroupFactory, createGroup)
     SegmentGroupFactory factory{ul_f};
 
     auto result = factory.create_group();
-    EXPECT_THAT(result, testing::A<SegmentGroup>());
+    using expected_type = std::unique_ptr<SegmentGroup>;
+    EXPECT_THAT(result, testing::A<expected_type>());
 }

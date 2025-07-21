@@ -9,7 +9,7 @@ namespace MyNetwork
     {
     public:
         SegmentGroupFactory(const UniqueListFactory &);
-        SegmentGroup create_group();
+        std::unique_ptr<SegmentGroup> create_group();
 
     private:
         UniqueListFactory list_factory;
