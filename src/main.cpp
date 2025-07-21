@@ -50,10 +50,15 @@ std::vector<Segment> get_all_segments()
 int main()
 {
     // TODO: dependency injection
-    std::shared_ptr<SegmentMerger> shared_sm = std::make_shared<SegmentMerger>();
-    std::shared_ptr<UniqueListFactory> shared_ul_f = std::make_shared<UniqueListFactory>(shared_sm);
-    SegmentGroupFactory sg_f{shared_ul_f};
-    DuplicationDetector detector{sg_f};
+    std::shared_ptr<SegmentMerger> shared_sm =
+        std::make_shared<SegmentMerger>();
+    std::shared_ptr<UniqueListFactory> shared_ul_f =
+        std::make_shared<UniqueListFactory>(shared_sm);
+    std::unique_ptr<SegmentGroupFactory> unique_group_factory =
+        std::make_unique<SegmentGroupFactory>(shared_ul_f);
+        
+    DuplicationDetector detector{std::move(unique_group_factory)};
+    unique_group_factory = nullptr;
 
     for (const Segment &segment : get_all_segments())
     {

@@ -11,14 +11,16 @@ namespace MyNetwork
     class DuplicationDetector
     {
     public:
-        DuplicationDetector(const SegmentGroupFactory &sg_f) : group_factory{sg_f} {};
+        DuplicationDetector(std::unique_ptr<SegmentGroupFactory> sg_f)
+            : group_factory{std::move(sg_f)} {};
+
         void add_segment(const Segment &segment)
         {
-            auto location_key = get_location_key(segment);
+            std::string location_key = get_location_key(segment);
             auto group_it = location_groups.find(location_key);
             if (group_it == location_groups.end())
             {
-                auto new_group_pointer = group_factory.create_group();
+                auto new_group_pointer = group_factory->create_group();
                 new_group_pointer->add(segment);
                 location_groups.insert({location_key, std::move(new_group_pointer)});
             }
@@ -31,7 +33,7 @@ namespace MyNetwork
         std::deque<Segment> get_all_duplications() const
         {
             std::deque<Segment> result;
-            for (auto& [_key, group] : location_groups)
+            for (auto &[_key, group] : location_groups)
             {
                 auto duplications_for_group = group->get_all_duplications();
                 result.insert(
@@ -48,7 +50,7 @@ namespace MyNetwork
             return segment.postal_code + "_" + segment.STREET_NAME_AND_TYPE;
         }
 
-        SegmentGroupFactory group_factory;
+        std::unique_ptr<SegmentGroupFactory> group_factory;
         std::map<std::string, std::unique_ptr<SegmentGroup>> location_groups;
     };
 }
