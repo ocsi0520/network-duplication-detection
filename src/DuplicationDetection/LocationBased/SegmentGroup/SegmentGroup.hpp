@@ -14,7 +14,7 @@ namespace MyNetwork
         SegmentGroup &operator=(const SegmentGroup &) = delete;
         SegmentGroup &operator=(SegmentGroup &&) = delete;
 
-        SegmentGroup(UniqueListFactory);
+        SegmentGroup(std::shared_ptr<UniqueListFactory>);
 
         void add(const Segment &segment);
         const std::deque<Segment> get_all_duplications() const;

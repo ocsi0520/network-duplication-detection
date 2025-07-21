@@ -6,9 +6,10 @@ using namespace MyNetwork;
 
 TEST(SegmentGroupFactory, createGroup)
 {
-    SegmentMerger sm;
-    UniqueListFactory ul_f{std::make_shared<SegmentMerger>()};
-    SegmentGroupFactory factory{ul_f};
+    std::shared_ptr<UniqueListFactory> ul_f_pointer =
+        std::make_shared<UniqueListFactory>(std::make_shared<SegmentMerger>());
+
+    SegmentGroupFactory factory{ul_f_pointer};
 
     auto result = factory.create_group();
     using expected_type = std::unique_ptr<SegmentGroup>;

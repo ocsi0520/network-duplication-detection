@@ -8,10 +8,10 @@ namespace MyNetwork
     class SegmentGroupFactory
     {
     public:
-        SegmentGroupFactory(const UniqueListFactory &);
+        SegmentGroupFactory(std::shared_ptr<UniqueListFactory>);
         std::unique_ptr<SegmentGroup> create_group();
 
     private:
-        UniqueListFactory list_factory;
+        std::shared_ptr<UniqueListFactory> list_factory;
     };
 }

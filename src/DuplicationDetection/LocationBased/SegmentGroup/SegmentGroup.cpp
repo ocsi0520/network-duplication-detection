@@ -3,9 +3,10 @@
 using namespace MyNetwork;
 // TODO: tests
 
-SegmentGroup::SegmentGroup(UniqueListFactory ul_f) : mixed{ul_f.create_unique_list()},
-                                                     odd{ul_f.create_unique_list()},
-                                                     even{ul_f.create_unique_list()} {};
+SegmentGroup::SegmentGroup(
+    std::shared_ptr<UniqueListFactory> ul_f) : mixed{ul_f->create_unique_list()},
+                                               odd{ul_f->create_unique_list()},
+                                               even{ul_f->create_unique_list()} {};
 
 void SegmentGroup::add(const Segment &segment)
 {
