@@ -13,8 +13,8 @@ namespace MyNetwork
         const std::deque<Segment> get_all_duplications() const;
 
     private:
-        UniqueList mixed;
-        UniqueList odd;
-        UniqueList even;
+        std::unique_ptr<UniqueList> mixed;
+        std::unique_ptr<UniqueList> odd;
+        std::unique_ptr<UniqueList> even;
     };
 }

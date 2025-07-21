@@ -58,10 +58,10 @@ static const std::vector<std::pair<int, int>> initial_intervals =
         {75, 89},
         {105, 119}};
 
-static UniqueList get_base_test_list()
+static std::unique_ptr<UniqueList> get_base_test_list()
 {
-    UniqueList ul{std::make_shared<SegmentMerger>()};
+    auto ul_pointer = std::make_unique<UniqueList>(std::make_shared<SegmentMerger>());
     for (const auto &interval : initial_intervals)
-        ul.add_segment(create_same_type_segment(interval.first, interval.second));
-    return ul;
+        ul_pointer->add_segment(create_same_type_segment(interval.first, interval.second));
+    return ul_pointer;
 }

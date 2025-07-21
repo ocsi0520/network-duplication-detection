@@ -11,6 +11,13 @@ namespace MyNetwork
     {
     public:
         UniqueList(std::shared_ptr<SegmentMerger>);
+
+        UniqueList(const UniqueList&) = delete;
+        UniqueList(UniqueList&&) = delete;
+
+        UniqueList& operator=(const UniqueList&) = delete;
+        UniqueList& operator=(UniqueList&&) = delete;
+
         void add_segment(const Segment&);
         const std::deque<Segment> &get_all_traversed() const;
         const std::deque<Segment> &get_all_duplications() const;

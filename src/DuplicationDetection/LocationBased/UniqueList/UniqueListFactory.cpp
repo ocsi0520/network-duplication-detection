@@ -3,7 +3,7 @@
 using namespace MyNetwork;
 
 UniqueListFactory::UniqueListFactory(std::shared_ptr<SegmentMerger> sm) : merger{sm} {};
-UniqueList UniqueListFactory::create_unique_list()
+std::unique_ptr<UniqueList> UniqueListFactory::create_unique_list()
 {
-    return UniqueList{merger};
+    return std::make_unique<UniqueList>(merger);
 }
