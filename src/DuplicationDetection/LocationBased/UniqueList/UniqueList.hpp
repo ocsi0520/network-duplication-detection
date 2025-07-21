@@ -3,13 +3,14 @@
 #include "SegmentMerger.hpp"
 #include <deque>
 #include <vector>
+#include <memory>
 
 namespace MyNetwork
 {
     class UniqueList
     {
     public:
-        UniqueList(SegmentMerger);
+        UniqueList(std::shared_ptr<SegmentMerger>);
         void add_segment(const Segment&);
         const std::deque<Segment> &get_all_traversed() const;
         const std::deque<Segment> &get_all_duplications() const;
@@ -19,6 +20,6 @@ namespace MyNetwork
 
         std::deque<Segment> all_traversed{};
         std::deque<Segment> duplications{};
-        SegmentMerger merger;
+        std::shared_ptr<SegmentMerger> merger;
     };
 }

@@ -7,7 +7,7 @@ using namespace MyNetwork;
 TEST(SegmentGroupFactory, createGroup)
 {
     SegmentMerger sm;
-    UniqueListFactory ul_f{sm};
+    UniqueListFactory ul_f{std::make_shared<SegmentMerger>()};
     SegmentGroupFactory factory{ul_f};
 
     auto result = factory.create_group();

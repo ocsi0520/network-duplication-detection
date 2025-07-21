@@ -7,7 +7,7 @@ using namespace MyNetwork;
 TEST(UniqueListFactory, CreateUniqueList)
 {
     SegmentMerger sm;
-    UniqueListFactory factory{sm};
+    UniqueListFactory factory{std::make_shared<SegmentMerger>()};
     auto result = factory.create_unique_list();
     EXPECT_THAT(result, testing::A<UniqueList>());
 }

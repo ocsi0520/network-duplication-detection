@@ -5,7 +5,7 @@
 
 TEST(UniqueListTest, AddToEmpty)
 {
-    UniqueList ul{SegmentMerger{}};
+    UniqueList ul{std::make_shared<SegmentMerger>()};
     ul.add_segment(create_same_type_segment(5, 7));
     EXPECT_TRUE(ul.get_all_duplications().empty());
     test_list(ul.get_all_traversed(), {{5, 7}});
@@ -13,7 +13,7 @@ TEST(UniqueListTest, AddToEmpty)
 
 TEST(UniqueListTest, AddSameTwice)
 {
-    UniqueList ul{SegmentMerger{}};
+    UniqueList ul{std::make_shared<SegmentMerger>()};
     ul.add_segment(create_same_type_segment(5, 7));
     ul.add_segment(create_same_type_segment(5, 7));
     test_list(ul.get_all_duplications(), {{5, 7}});
@@ -22,7 +22,7 @@ TEST(UniqueListTest, AddSameTwice)
 
 TEST(UniqueListTest, AddSameThrice)
 {
-    UniqueList ul{SegmentMerger{}};
+    UniqueList ul{std::make_shared<SegmentMerger>()};
     ul.add_segment(create_same_type_segment(5, 7));
     ul.add_segment(create_same_type_segment(5, 7));
     ul.add_segment(create_same_type_segment(5, 7));

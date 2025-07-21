@@ -2,7 +2,7 @@
 
 using namespace MyNetwork;
 
-UniqueListFactory::UniqueListFactory(const SegmentMerger &sm) : merger{sm} {};
+UniqueListFactory::UniqueListFactory(std::shared_ptr<SegmentMerger> sm) : merger{sm} {};
 UniqueList UniqueListFactory::create_unique_list()
 {
     return UniqueList{merger};
