@@ -11,6 +11,12 @@ namespace MyNetwork
     class DuplicationDetector
     {
     public:
+        DuplicationDetector(const DuplicationDetector &) = delete;
+        DuplicationDetector(DuplicationDetector &&) = delete;
+
+        DuplicationDetector &operator=(const DuplicationDetector &) = delete;
+        DuplicationDetector &operator=(DuplicationDetector &&) = delete;
+
         DuplicationDetector(std::unique_ptr<SegmentGroupFactory> sg_f)
             : group_factory{std::move(sg_f)} {};
 
