@@ -16,8 +16,10 @@ namespace MyNetwork
 
         SegmentGroup(std::shared_ptr<UniqueListFactory>);
 
-        void add(const Segment &segment);
-        const std::deque<Segment> get_all_duplications() const;
+        virtual void add(const Segment &segment);
+        virtual const std::deque<Segment> get_all_duplications() const;
+
+        virtual ~SegmentGroup() {};
 
     private:
         std::unique_ptr<UniqueList> mixed;
