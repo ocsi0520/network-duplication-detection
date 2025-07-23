@@ -15,7 +15,9 @@ namespace MyNetwork
         SegmentGroupFactory &operator=(SegmentGroupFactory &&) = delete;
 
         SegmentGroupFactory(std::shared_ptr<UniqueListFactory>);
-        std::unique_ptr<SegmentGroup> create_group();
+        virtual std::unique_ptr<SegmentGroup> create_group();
+
+        virtual ~SegmentGroupFactory() {}
 
     private:
         std::shared_ptr<UniqueListFactory> list_factory;
