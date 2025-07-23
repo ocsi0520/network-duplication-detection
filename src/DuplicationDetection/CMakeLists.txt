@@ -6,6 +6,7 @@ add_library(
     LocationBased/UniqueList/UniqueListFactory.cpp
     LocationBased/SegmentGroup/SegmentGroup.cpp
     LocationBased/SegmentGroup/SegmentGroupFactory.cpp
+    DuplicationDetector.cpp
 )
 
 target_include_directories(
