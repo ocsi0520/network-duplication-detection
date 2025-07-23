@@ -8,4 +8,4 @@ target_include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/CellParser
 )
 
-target_link_libraries(network_duplication PUBLIC reader)
+target_link_libraries(solution PUBLIC reader)

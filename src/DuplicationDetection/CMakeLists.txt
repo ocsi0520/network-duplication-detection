@@ -16,4 +16,4 @@ target_include_directories(
 )
 
 target_link_libraries(duplication_detection PUBLIC segment)
-target_link_libraries(network_duplication PUBLIC duplication_detection)
+target_link_libraries(solution PUBLIC duplication_detection)
