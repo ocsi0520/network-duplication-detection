@@ -1,7 +1,6 @@
 #include "SegmentGroup.hpp"
 
 using namespace MyNetwork;
-// TODO: tests
 
 SegmentGroup::SegmentGroup(
     std::shared_ptr<UniqueListFactory> ul_f) : mixed{ul_f->create_unique_list()},

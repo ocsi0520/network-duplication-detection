@@ -18,9 +18,11 @@ namespace MyNetwork
         UniqueList& operator=(const UniqueList&) = delete;
         UniqueList& operator=(UniqueList&&) = delete;
 
-        void add_segment(const Segment&);
-        const std::deque<Segment> &get_all_traversed() const;
-        const std::deque<Segment> &get_all_duplications() const;
+        virtual void add_segment(const Segment&);
+        virtual const std::deque<Segment> &get_all_traversed() const;
+        virtual const std::deque<Segment> &get_all_duplications() const;
+
+        virtual ~UniqueList(){}
 
     private:
         std::vector<Segment> insert_segment_into_list(std::deque<Segment> &list, Segment segment);

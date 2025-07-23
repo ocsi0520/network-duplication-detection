@@ -15,7 +15,7 @@ namespace MyNetwork
         UniqueListFactory &operator=(UniqueListFactory &&) = delete;
 
         UniqueListFactory(std::shared_ptr<SegmentMerger>);
-        std::unique_ptr<UniqueList> create_unique_list();
+        virtual std::unique_ptr<UniqueList> create_unique_list();
 
     private:
         std::shared_ptr<SegmentMerger> merger;
