@@ -3,21 +3,23 @@
 #include "SegmentGroup.hpp"
 #include "LocationBased/UniqueList/UniqueListFactory.hpp"
 
-// TODO: tests
-
 namespace MyNetwork
 {
     class SegmentGroupFactory
     {
     public:
-        // TODO: check this
-        SegmentGroupFactory(const UniqueListFactory &ul_f) : list_factory{ul_f} {};
-        SegmentGroup create_group()
-        {
-            return SegmentGroup{list_factory};
-        }
+        SegmentGroupFactory(const SegmentGroupFactory &) = delete;
+        SegmentGroupFactory(SegmentGroupFactory &&) = delete;
+
+        SegmentGroupFactory &operator=(const SegmentGroupFactory &) = delete;
+        SegmentGroupFactory &operator=(SegmentGroupFactory &&) = delete;
+
+        SegmentGroupFactory(std::shared_ptr<UniqueListFactory>);
+        virtual std::unique_ptr<SegmentGroup> create_group();
+
+        virtual ~SegmentGroupFactory() {}
 
     private:
-        UniqueListFactory list_factory;
+        std::shared_ptr<UniqueListFactory> list_factory;
     };
 }

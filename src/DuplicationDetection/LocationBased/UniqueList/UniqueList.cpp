@@ -3,10 +3,9 @@
 
 using namespace MyNetwork;
 
-UniqueList::UniqueList(SegmentMerger sm) : merger{sm} {};
+UniqueList::UniqueList(std::shared_ptr<SegmentMerger> sm) : merger{sm} {};
 
-// TODO: check whether const Segment&
-void UniqueList::add_segment(Segment new_s)
+void UniqueList::add_segment(const Segment& new_s)
 {
     auto first_level_duplications = insert_segment_into_list(all_traversed, new_s);
     for (auto &first_level_duplication : first_level_duplications)
@@ -30,7 +29,7 @@ std::vector<Segment> UniqueList::insert_segment_into_list(std::deque<Segment> &l
         {
             // no contiguous and less
             return new_s.to_street_number <
-                   merger.one_less_street_number(list_s.parity, list_s.from_street_number);
+                   merger->one_less_street_number(list_s.parity, list_s.from_street_number);
         });
 
     if (greater_non_mergeable_it == list.begin())
@@ -42,15 +41,15 @@ std::vector<Segment> UniqueList::insert_segment_into_list(std::deque<Segment> &l
     auto merge_candidate_it = greater_non_mergeable_it - 1;
     std::vector<Segment> current_duplications;
 
-    while (merger.is_mergeable(*merge_candidate_it, new_s))
+    while (merger->is_mergeable(*merge_candidate_it, new_s))
     {
-        if (merger.has_duplication(*merge_candidate_it, new_s))
+        if (merger->has_duplication(*merge_candidate_it, new_s))
         {
             // TODO: insert in reverse order, so it might be more efficient
             current_duplications.push_back(
-                merger.get_duplicate_segment_from(*merge_candidate_it, new_s));
+                merger->get_duplicate_segment_from(*merge_candidate_it, new_s));
         }
-        new_s = merger.merge_segments(*merge_candidate_it, new_s);
+        new_s = merger->merge_segments(*merge_candidate_it, new_s);
         if (merge_candidate_it == list.begin()) // new_s contained the whole first part of the list
         {
             *merge_candidate_it = new_s;

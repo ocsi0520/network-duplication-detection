@@ -66,6 +66,7 @@
         "streambuf": "cpp",
         "thread": "cpp",
         "variant": "cpp",
-        "cassert": "cpp"
+        "cassert": "cpp",
+        "ranges": "cpp"
     }
 }

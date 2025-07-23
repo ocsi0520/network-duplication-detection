@@ -8,13 +8,22 @@ namespace MyNetwork
     class SegmentGroup
     {
     public:
-        SegmentGroup(UniqueListFactory);
-        void add(const Segment &segment);
-        const std::deque<Segment> get_all_duplications() const;
+        SegmentGroup(const SegmentGroup &) = delete;
+        SegmentGroup(SegmentGroup &&) = delete;
+
+        SegmentGroup &operator=(const SegmentGroup &) = delete;
+        SegmentGroup &operator=(SegmentGroup &&) = delete;
+
+        SegmentGroup(std::shared_ptr<UniqueListFactory>);
+
+        virtual void add(const Segment &segment);
+        virtual const std::deque<Segment> get_all_duplications() const;
+
+        virtual ~SegmentGroup() {};
 
     private:
-        UniqueList mixed;
-        UniqueList odd;
-        UniqueList even;
+        std::unique_ptr<UniqueList> mixed;
+        std::unique_ptr<UniqueList> odd;
+        std::unique_ptr<UniqueList> even;
     };
 }
