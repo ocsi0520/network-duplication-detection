@@ -4,7 +4,6 @@
 #include <deque>
 
 // TODO: create .cpp
-// TODO: tests
 
 namespace MyNetwork
 {
