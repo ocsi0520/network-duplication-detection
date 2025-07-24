@@ -16,6 +16,10 @@ register_module_tests(duplication_detection ${CMAKE_CURRENT_SOURCE_DIR}/Duplicat
 
 # e2e tests
 add_executable(solution_e2e_tests ./__tests__/solution_e2e_tests.cpp)
+
+target_compile_options(solution_e2e_tests PRIVATE --coverage)
+target_link_options(solution_e2e_tests PRIVATE --coverage)
+
 target_link_libraries(
     solution_e2e_tests
     PRIVATE

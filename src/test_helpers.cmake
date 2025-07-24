@@ -58,6 +58,10 @@ function(register_module_tests module_name module_dir)
     if(TEST_SOURCES)
         set(target_name "${module_name}_tests")
         add_executable(${target_name} ${TEST_SOURCES})
+
+        target_compile_options(${target_name} PRIVATE --coverage)
+        target_link_options(${target_name} PRIVATE --coverage)
+
         target_link_libraries(${target_name}
             PRIVATE
             ${module_name}
